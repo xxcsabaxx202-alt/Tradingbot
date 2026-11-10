@@ -1,0 +1,25 @@
+'use strict';
+// Deterministic synthetic OHLC close data. No real prices or exchange API.
+const $=id=>document.getElementById(id), START={BTC:65000,ETH:3200,SOL:145};
+function series(symbol,n=720){let seed={BTC:113,ETH:227,SOL:337}[symbol],p=START[symbol],out=[];for(let i=0;i<n;i++){seed=(1664525*seed+1013904223)>>>0;const u=seed/4294967296-.5;let drift=.00016+Math.sin(i/44)*.0013; p*=Math.exp(drift+u*.021);out.push(p)}return out}
+const DATA=Object.fromEntries(Object.keys(START).map(s=>[s,series(s)]));
+function ema(v,n){if(v.length<n)return null;let e=v[0],k=2/(n+1);for(let i=1;i<v.length;i++)e=v[i]*k+e*(1-k);return e}
+function rsi(v,n=14){if(v.length<=n)return null;let gain=0,loss=0;for(let i=v.length-n;i<v.length;i++){let d=v[i]-v[i-1];gain+=Math.max(d,0);loss+=Math.max(-d,0)}return loss===0?100:100-100/(1+gain/loss)}
+function macd(v){if(v.length<26)return null;return ema(v,12)-ema(v,26)}
+function features(v){const e1=ema(v,12),e2=ema(v,26),r=rsi(v),m=macd(v);if(e2===null||r===null)return null;return [(e1>e2?1:-1),(r<38?1:r>68?-1:0),(m>0?1:-1)]}
+function fresh(symbol){return {symbol,idx:50,cash:10000,position:null,logs:[],weights:[.5,.3,.2],closed:0,wins:0,peak:10000,maxDD:0}}
+let state=fresh('BTC'),timer=null;
+function score(s,feat){return feat.reduce((sum,x,i)=>sum+x*s.weights[i],0)}
+function equity(s,price){return s.cash+(s.position?s.position.qty*price:0)}
+function runCandle(s,sl=3,tp=6){if(s.idx>=DATA[s.symbol].length)return false;const price=DATA[s.symbol][s.idx],past=DATA[s.symbol].slice(0,s.idx+1),f=features(past),signal=f?score(s,f):0;const pos=s.position;
+ if(pos){let reason=price<=pos.entry*(1-sl/100)?'STOP':price>=pos.entry*(1+tp/100)?'TAKE':signal<-.3?'SELL':null;if(reason){let proceeds=pos.qty*price*.999,profit=proceeds-pos.cost;s.cash+=proceeds;s.closed++;if(profit>0)s.wins++;s.logs.unshift({idx:s.idx,symbol:s.symbol,side:reason,price,profit});let outcome=profit>0?1:-1;for(let i=0;i<3;i++)s.weights[i]=Math.max(.05,Math.min(1.5,s.weights[i]+.035*outcome*pos.features[i]));s.position=null}}
+ else if(signal>.35&&s.cash>100){let cost=s.cash*.15,qty=cost*.999/price;s.cash-=cost;s.position={entry:price,qty,cost,features:f};s.logs.unshift({idx:s.idx,symbol:s.symbol,side:'BUY',price,profit:null})}
+ let eq=equity(s,price);s.peak=Math.max(s.peak,eq);s.maxDD=Math.max(s.maxDD,(s.peak-eq)/s.peak*100);s.idx++;return true}
+function fmt(x){return Number(x).toLocaleString('hu-HU',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function draw(s){const c=$('chart'),ctx=c.getContext('2d'),v=DATA[s.symbol].slice(Math.max(0,s.idx-120),s.idx);ctx.clearRect(0,0,c.width,c.height);if(v.length<2)return;let lo=Math.min(...v),hi=Math.max(...v),span=hi-lo||1;ctx.strokeStyle='#56d4c6';ctx.lineWidth=2;ctx.beginPath();v.forEach((p,i)=>{let x=20+i/(v.length-1)*(c.width-40),y=20+(hi-p)/span*(c.height-40);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}
+function render(){const price=DATA[state.symbol][Math.min(state.idx-1,719)],eq=equity(state,price),f=features(DATA[state.symbol].slice(0,state.idx));$('equity').textContent=fmt(eq)+' USDT';$('cash').textContent=fmt(state.cash);$('pnl').textContent=(eq>=10000?'+':'')+fmt(eq-10000)+' USDT';$('pnl').className=eq>=10000?'good':'bad';$('trades').textContent=state.closed+' ('+state.wins+' nyereséges)';$('position').textContent=state.position?`${state.symbol}: ${fmt(state.position.qty)} db | belépő ${fmt(state.position.entry)} | jelenlegi ${fmt(price)}`:'Nincs nyitott pozíció';$('signal').textContent=`${state.symbol} • ${state.idx}. gyertya • ár: ${fmt(price)} USDT • jelzés: ${f?score(state,f).toFixed(2):'n/a'}`;$('model').textContent='Tanuló súlyok (EMA / RSI / MACD): '+state.weights.map(x=>x.toFixed(2)).join(' / ')+' • Max. visszaesés: '+fmt(state.maxDD)+'%';$('log').replaceChildren(...state.logs.slice(0,30).map(t=>{let tr=document.createElement('tr');[t.idx,t.symbol,t.side,fmt(t.price),t.profit===null?'—':fmt(t.profit)+' USDT'].forEach(x=>{let td=document.createElement('td');td.textContent=x;tr.appendChild(td)});return tr}));draw(state)}
+function stop(){if(timer)clearInterval(timer);timer=null;$('auto').textContent='Automata: KI'}
+$('step').onclick=()=>{if(!runCandle(state,+$('sl').value,+$('tp').value))stop();render()};$('auto').onclick=()=>{if(timer){stop();return}timer=setInterval(()=>{if(!runCandle(state,+$('sl').value,+$('tp').value))stop();render()},1000);$('auto').textContent='Automata: BE'};
+$('symbol').onchange=()=>{stop();state=fresh($('symbol').value);render()};$('reset').onclick=()=>{stop();state=fresh($('symbol').value);$('result').textContent='Még nem futott visszateszt.';render()};
+$('backtest').onclick=()=>{let s=fresh($('symbol').value);while(runCandle(s,+$('sl').value,+$('tp').value)){}let last=DATA[s.symbol].at(-1),eq=equity(s,last);$('result').textContent=`${s.symbol}: végső egyenleg ${fmt(eq)} USDT | hozam ${fmt((eq/10000-1)*100)}% | lezárt kötések ${s.closed} | találati arány ${s.closed?fmt(s.wins/s.closed*100):'0'}% | max. visszaesés ${fmt(s.maxDD)}%. Szintetikus, mintán belüli teszt; nem független validáció.`};
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});render();
