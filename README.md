@@ -1,22 +1,16 @@
-# Crypto Paper Bot 3.0
+# Crypto Paper Bot 4.0
 
-Androidon használható, statikus GitHub Pages PWA. **Kizárólag oktatási célú, virtuális kereskedés.** Nem kapcsolódik kereskedési fiókhoz, nem küld megbízást.
+Androidon használható, GitHub Pages alatt futó, kizárólag virtuális kereskedési szimulátor.
 
 ## Újdonságok
-- BTC/ETH/SOL 1 órás historikus gyertyák a nyilvános Binance Vision API-ról.
-- EMA/RSI/MACD-proxy hibrid pontozás; lezárt ügyletek alapján adaptív súlyok.
-- Három időrendben elkülönített, részben átfedő tesztablak (55–75%, 65–85%, 75–95%).
-- Adaptív és fix súlyú kontroll azonos időablakon.
-- Jutalék (0,1% oldalanként) és becsült csúszás (0,05% oldalanként).
-- Profitfaktor, átlagos kötés-eredmény, visszaesés, kötésdarabszám.
-- Böngésző helyi tárhelye, JSON napló export.
+- Három **nem átfedő** időrendi tesztablak, ugyanazokon a szakaszokon adaptív és fix súlyú kontroll.
+- Egyszerű piaci állapotfelismerés (trend / oldalazás / volatilis) EMA-különbség és ATR alapján.
+- Csak trendnek besorolt környezetben nyit új pozíciót; volatilitásfüggő pozícióméret.
+- Kihagyott jelzések számlálása, költségszimuláció, profitfaktor és drawdown.
+- Új v4-es helyi mentés; a v3-as mentés nem importálódik automatikusan.
 
-## Telepítés
-A hat fájlt a GitHub repository főkönyvtárába kell feltölteni; Pages: main / (root). A korábbi 2.0 adatai nem kerülnek automatikusan a 3.0-ba; a régi 2.0 mentés a böngészőben megmarad.
+## Használat
+A hat fájlt a GitHub repository gyökerébe töltsd fel. A Pages main/(root) beállítás maradhat. Az alkalmazásban töltsd le a BTC/ETH/SOL historikus órás gyertyáit, majd futtasd a 3 különálló tesztablakot. A szimuláció egy gyertyát léptet másodpercenként, csak aktív böngészőlap mellett.
 
 ## Korlátok
-- Nem élő kereskedés: 1 historikus gyertya/másodperc, csak nyitott oldalon.
-- Gyertyazár-alapú végrehajtás; nem kezeli a gyertyán belüli stopot, spreadet, likviditást vagy a valós megbízás teljesülését.
-- A tesztablakok átfednek, ezért nem függetlenek. A modell nem bizonyítottan nyereséges.
-- A tanuló súlyok egyszerű heurisztikával változnak, nem neurális hálózattal.
-- A helyi mentés elveszhet a böngésző adatainak törlésekor.
+Nincs élő kereskedés, tőzsdei számlakapcsolat, valódi megbízás vagy garantált hozam. Az ATR-alapú piaci besorolás heurisztikus. A visszateszt nem szimulál gyertyán belüli stop-végrehajtást, order bookot vagy valós likviditást. A tanulási előzmények átfedhetnek; kevés kötés esetén a becslések bizonytalanok. Az árfolyamok a nyilvános Binance Vision API-tól függnek.
