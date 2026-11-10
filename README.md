@@ -1,16 +1,17 @@
-# Crypto Paper Bot 4.0
+# Crypto Paper Bot v5.0
 
-Androidon használható, GitHub Pages alatt futó, kizárólag virtuális kereskedési szimulátor.
+Android-compatible GitHub Pages paper-trading simulator. **Never places real orders.**
 
-## Újdonságok
-- Három **nem átfedő** időrendi tesztablak, ugyanazokon a szakaszokon adaptív és fix súlyú kontroll.
-- Egyszerű piaci állapotfelismerés (trend / oldalazás / volatilis) EMA-különbség és ATR alapján.
-- Csak trendnek besorolt környezetben nyit új pozíciót; volatilitásfüggő pozícióméret.
-- Kihagyott jelzések számlálása, költségszimuláció, profitfaktor és drawdown.
-- Új v4-es helyi mentés; a v3-as mentés nem importálódik automatikusan.
+## Features
+- BTC/ETH/SOL historical hourly candles via public Binance REST API; up to 3000 candles, paginated (network availability and API regional restrictions apply).
+- EMA/RSI/MACD-proxy hybrid adaptive weights, ATR-derived indicator, trend filter, stop/take, position sizing.
+- Three disjoint chronological test windows, each compared with fixed weights and Buy & Hold. Prior training sets overlap; results are not independent samples.
+- 0.10% fee and 0.05% assumed slippage per side; candle-close execution simplification.
+- Trade decision diagnostics, JSON export, localStorage simulation state (candles not persisted; reload data to resume; currently UI resets the simulation on reload).
+- Historical candle replay at one candle per second only while the page is open.
 
-## Használat
-A hat fájlt a GitHub repository gyökerébe töltsd fel. A Pages main/(root) beállítás maradhat. Az alkalmazásban töltsd le a BTC/ETH/SOL historikus órás gyertyáit, majd futtasd a 3 különálló tesztablakot. A szimuláció egy gyertyát léptet másodpercenként, csak aktív böngészőlap mellett.
+## Deployment
+Upload all six files to the repository root and commit. GitHub Pages: deploy from main / root. Refresh after deployment. No keys or exchange credentials needed.
 
-## Korlátok
-Nincs élő kereskedés, tőzsdei számlakapcsolat, valódi megbízás vagy garantált hozam. Az ATR-alapú piaci besorolás heurisztikus. A visszateszt nem szimulál gyertyán belüli stop-végrehajtást, order bookot vagy valós likviditást. A tanulási előzmények átfedhetnek; kevés kötés esetén a becslések bizonytalanok. Az árfolyamok a nyilvános Binance Vision API-tól függnek.
+## Caveats
+This is an educational simulation, not investment advice. No real-time trading, background server or guaranteed profit. Browser availability of Binance REST varies by region. The strategy has not been independently validated. Local storage contains an exportable snapshot but the current UI does not automatically restore state on refresh; use JSON export to retain a record.
