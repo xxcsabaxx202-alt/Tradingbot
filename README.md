@@ -1,17 +1,16 @@
-# Crypto Paper Bot v5.0
+# Crypto Paper Bot 6.0
 
-Android-compatible GitHub Pages paper-trading simulator. **Never places real orders.**
+Androidon is használható GitHub Pages PWA, kizárólag historikus adatokkal és virtuális kereskedéssel. Nincsenek valódi tőzsdei megbízások vagy API-kulcsok.
 
-## Features
-- BTC/ETH/SOL historical hourly candles via public Binance REST API; up to 3000 candles, paginated (network availability and API regional restrictions apply).
-- EMA/RSI/MACD-proxy hybrid adaptive weights, ATR-derived indicator, trend filter, stop/take, position sizing.
-- Three disjoint chronological test windows, each compared with fixed weights and Buy & Hold. Prior training sets overlap; results are not independent samples.
-- 0.10% fee and 0.05% assumed slippage per side; candle-close execution simplification.
-- Trade decision diagnostics, JSON export, localStorage simulation state (candles not persisted; reload data to resume; currently UI resets the simulation on reload).
-- Historical candle replay at one candle per second only while the page is open.
+## Újdonságok
+- Piaci rezsim (eső, trendelő, oldalazó) és volatilitás szerinti vételi szűrés
+- Állítható belépési küszöb és ATR-hez igazított stop-loss
+- Három nem átfedő tesztablak, adaptív/fix/Buy & Hold kontroll
+- Találati arány és profitfaktor ablakonként
+- Helyi szimuláció mentése és visszaállítása azonos adatsor esetén
 
-## Deployment
-Upload all six files to the repository root and commit. GitHub Pages: deploy from main / root. Refresh after deployment. No keys or exchange credentials needed.
+## Telepítés
+A hat fájlt a repository gyökerébe kell feltölteni. GitHub Pages: main / (root). Androidon az oldal újratöltése szükséges lehet.
 
-## Caveats
-This is an educational simulation, not investment advice. No real-time trading, background server or guaranteed profit. Browser availability of Binance REST varies by region. The strategy has not been independently validated. Local storage contains an exportable snapshot but the current UI does not automatically restore state on refresh; use JSON export to retain a record.
+## Korlátok
+A historikus gyertyák a nyilvános Binance API-ból érkeznek; a szolgáltatás régiónként elérhetetlen lehet. A stratégia tanulása egyszerű súlyfrissítés, nem mélytanulás. A stop és take gyertyazáras, nem intrabar. Az időablakok tanulási előzményei átfedhetnek. A modell nem garantál nyereséget. A szimuláció csak nyitott böngészőben fut.
