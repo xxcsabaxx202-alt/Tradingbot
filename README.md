@@ -1,25 +1,22 @@
-# Crypto Paper Bot 2.0
+# Crypto Paper Bot 3.0
 
-Androidon futó, GitHub Pages-re telepíthető, kizárólag virtuális kriptokereskedési oktatási szimulátor.
+Androidon használható, statikus GitHub Pages PWA. **Kizárólag oktatási célú, virtuális kereskedés.** Nem kapcsolódik kereskedési fiókhoz, nem küld megbízást.
 
-## Funkciók
-- Nyilvános Binance Vision API-ról legfeljebb 1000 darab 1 órás BTC/ETH/SOL USDT historikus záróár letöltése. Internetkapcsolat szükséges; ha a szolgáltatás nem elérhető, hibaüzenet jelenik meg.
-- EMA12/EMA26, RSI14, MACD (12/26/9) hisztogram előjele alapján súlyozott jelzés.
-- Egyszerű online súlyfrissítés lezárt virtuális ügyletek után; nem neurális hálózat és nem garantáltan javuló modell.
-- 70/30 időrendi walk-forward teszt: tanulás az első szakaszon, súlyok befagyasztva a tesztszakaszra.
-- 0,1% becsült vételi és eladási díj; záróár-alapú stop-loss/take-profit; nincs intrabar végrehajtás, spread vagy slippage.
-- 10 000 USDT kezdőtőke, maximum 15% készpénz egy új pozícióra, long-only, tőkeáttétel nélkül.
-- localStorage mentés, JSON naplóexport, Android PWA.
+## Újdonságok
+- BTC/ETH/SOL 1 órás historikus gyertyák a nyilvános Binance Vision API-ról.
+- EMA/RSI/MACD-proxy hibrid pontozás; lezárt ügyletek alapján adaptív súlyok.
+- Három időrendben elkülönített, részben átfedő tesztablak (55–75%, 65–85%, 75–95%).
+- Adaptív és fix súlyú kontroll azonos időablakon.
+- Jutalék (0,1% oldalanként) és becsült csúszás (0,05% oldalanként).
+- Profitfaktor, átlagos kötés-eredmény, visszaesés, kötésdarabszám.
+- Böngésző helyi tárhelye, JSON napló export.
 
-## GitHub Pages telepítés
-1. A ZIP-et bontsd ki.
-2. A hat fájlt közvetlenül a `Tradingbot` repository gyökerébe töltsd fel, a korábbi fájlok felülírásával (ne a ZIP-et töltsd fel).
-3. GitHub Settings → Pages → Deploy from a branch → main → /(root).
-4. Várd meg a publikálást, majd frissítsd az oldalt; ha a régi felület látszik, zárd be és nyisd újra.
+## Telepítés
+A hat fájlt a GitHub repository főkönyvtárába kell feltölteni; Pages: main / (root). A korábbi 2.0 adatai nem kerülnek automatikusan a 3.0-ba; a régi 2.0 mentés a böngészőben megmarad.
 
 ## Korlátok
-- A rendszer **nem** köt tőzsdei ügyletet, nem igényel API-kulcsot, nem tud valódi pénzhez hozzáférni.
-- Az automata csak nyitott/aktív böngészőben játssza vissza a már letöltött historikus adatokat. Nem háttérben működő 24/7 bot.
-- A teszt nem teljesen független kutatási validáció: egyetlen 70/30 felosztás, egyetlen piac és rövid időszak. A nyereség nem előrejelzés.
-- A mentés böngészőnként és eszközönként helyi; böngészőadatok törlésével elveszhet. Használd a JSON exportot.
-- A nyilvános API földrajzi, hálózati vagy szolgáltatói okból elérhetetlen lehet.
+- Nem élő kereskedés: 1 historikus gyertya/másodperc, csak nyitott oldalon.
+- Gyertyazár-alapú végrehajtás; nem kezeli a gyertyán belüli stopot, spreadet, likviditást vagy a valós megbízás teljesülését.
+- A tesztablakok átfednek, ezért nem függetlenek. A modell nem bizonyítottan nyereséges.
+- A tanuló súlyok egyszerű heurisztikával változnak, nem neurális hálózattal.
+- A helyi mentés elveszhet a böngésző adatainak törlésekor.
