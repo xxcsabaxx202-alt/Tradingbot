@@ -1,21 +1,25 @@
-# Crypto Paper Bot v1
+# Crypto Paper Bot 2.0
 
-Android-friendly PWA for **synthetic-data paper trading only**. No exchange integration, no real orders, no investment advice.
+Androidon futó, GitHub Pages-re telepíthető, kizárólag virtuális kriptokereskedési oktatási szimulátor.
 
-## Run
-Host this directory on GitHub Pages or any HTTPS static host. On Android open the URL in Chrome and choose **Add to Home screen**. Local file:// opening is not sufficient for service workers.
+## Funkciók
+- Nyilvános Binance Vision API-ról legfeljebb 1000 darab 1 órás BTC/ETH/SOL USDT historikus záróár letöltése. Internetkapcsolat szükséges; ha a szolgáltatás nem elérhető, hibaüzenet jelenik meg.
+- EMA12/EMA26, RSI14, MACD (12/26/9) hisztogram előjele alapján súlyozott jelzés.
+- Egyszerű online súlyfrissítés lezárt virtuális ügyletek után; nem neurális hálózat és nem garantáltan javuló modell.
+- 70/30 időrendi walk-forward teszt: tanulás az első szakaszon, súlyok befagyasztva a tesztszakaszra.
+- 0,1% becsült vételi és eladási díj; záróár-alapú stop-loss/take-profit; nincs intrabar végrehajtás, spread vagy slippage.
+- 10 000 USDT kezdőtőke, maximum 15% készpénz egy új pozícióra, long-only, tőkeáttétel nélkül.
+- localStorage mentés, JSON naplóexport, Android PWA.
 
-## Features
-- BTC/ETH/SOL deterministic synthetic hourly closing prices (not historical market prices)
-- EMA(12/26), RSI(14), MACD-line proxy (EMA12 minus EMA26; not the full MACD signal/histogram)
-- Online bounded weight update after closed simulated trades
-- 0.1% simulated transaction fee per side
-- Stop-loss / take-profit evaluated at candle close (not guaranteed execution at threshold)
-- 15% cash allocation per position; one long position at a time
-- Backtest on synthetic in-sample prices; no independent out-of-sample validation
+## GitHub Pages telepítés
+1. A ZIP-et bontsd ki.
+2. A hat fájlt közvetlenül a `Tradingbot` repository gyökerébe töltsd fel, a korábbi fájlok felülírásával (ne a ZIP-et töltsd fel).
+3. GitHub Settings → Pages → Deploy from a branch → main → /(root).
+4. Várd meg a publikálást, majd frissítsd az oldalt; ha a régi felület látszik, zárd be és nyisd újra.
 
-## Limitations
-No persistent state: refreshing resets the simulation. Auto mode runs only while the browser is active. There is no real-time market data or actual historical exchange data, and no background server or trained neural network. This project is a working prototype, not a production trading engine.
-
-## Security
-Never put exchange API keys into client-side JavaScript. Do not connect this demo to live trading.
+## Korlátok
+- A rendszer **nem** köt tőzsdei ügyletet, nem igényel API-kulcsot, nem tud valódi pénzhez hozzáférni.
+- Az automata csak nyitott/aktív böngészőben játssza vissza a már letöltött historikus adatokat. Nem háttérben működő 24/7 bot.
+- A teszt nem teljesen független kutatási validáció: egyetlen 70/30 felosztás, egyetlen piac és rövid időszak. A nyereség nem előrejelzés.
+- A mentés böngészőnként és eszközönként helyi; böngészőadatok törlésével elveszhet. Használd a JSON exportot.
+- A nyilvános API földrajzi, hálózati vagy szolgáltatói okból elérhetetlen lehet.
