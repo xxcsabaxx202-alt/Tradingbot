@@ -1,16 +1,9 @@
-# Crypto Paper Bot 6.0
+# Crypto Paper Bot v7.0
 
-Androidon is használható GitHub Pages PWA, kizárólag historikus adatokkal és virtuális kereskedéssel. Nincsenek valódi tőzsdei megbízások vagy API-kulcsok.
-
-## Újdonságok
-- Piaci rezsim (eső, trendelő, oldalazó) és volatilitás szerinti vételi szűrés
-- Állítható belépési küszöb és ATR-hez igazított stop-loss
-- Három nem átfedő tesztablak, adaptív/fix/Buy & Hold kontroll
-- Találati arány és profitfaktor ablakonként
-- Helyi szimuláció mentése és visszaállítása azonos adatsor esetén
+Kizárólag oktatási célú virtuális spot long szimulátor. Nem küld tőzsdei megbízásokat, nem kér API-kulcsot.
 
 ## Telepítés
-A hat fájlt a repository gyökerébe kell feltölteni. GitHub Pages: main / (root). Androidon az oldal újratöltése szükséges lehet.
+A csomag fájljait a GitHub Pages repository gyökérkönyvtárába töltsd fel, a meglévő fájlokat felülírva. Pages: main / (root). Mobilon frissítsd a lapot, szükség esetén töröld a régi webhelyadatokat.
 
-## Korlátok
-A historikus gyertyák a nyilvános Binance API-ból érkeznek; a szolgáltatás régiónként elérhetetlen lehet. A stratégia tanulása egyszerű súlyfrissítés, nem mélytanulás. A stop és take gyertyazáras, nem intrabar. Az időablakok tanulási előzményei átfedhetnek. A modell nem garantál nyereséget. A szimuláció csak nyitott böngészőben fut.
+## Megjegyzések
+A historikus adatok Binance nyilvános historikus klines API-jából származnak; a böngészőből való elérés szolgáltatói hozzáféréstől és CORS-tól függ. A 70/30 felosztás nem többablakos walk-forward validáció. A jelzések az előző lezárt gyertyán alapulnak, a következő gyertya nyitásán történik virtuális vétel. A stratégia indikátorai SMA20/SMA60, RSI14 és ATR14; nem neurális hálózat. A jutalék 0,10%, a becsült csúszás 0,05% oldalanként. A gyertyán belüli stop/célár sorrend ismeretlen. Az eredmények nem garantálnak nyereséget.
