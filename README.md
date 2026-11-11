@@ -1,9 +1,12 @@
-# Crypto Paper Bot v7.0
+# Crypto Paper Bot v8.0
 
-Kizárólag oktatási célú virtuális spot long szimulátor. Nem küld tőzsdei megbízásokat, nem kér API-kulcsot.
+Mobilbarát, statikus GitHub Pages virtuális kriptokereskedési szimulátor. Nincs API-kulcs, valódi kereskedés vagy szerveroldali adatmentés.
 
 ## Telepítés
-A csomag fájljait a GitHub Pages repository gyökérkönyvtárába töltsd fel, a meglévő fájlokat felülírva. Pages: main / (root). Mobilon frissítsd a lapot, szükség esetén töröld a régi webhelyadatokat.
+A ZIP tartalmát (ne magát a ZIP-et) töltsd fel a Tradingbot repository gyökerébe, a régi azonos nevű fájlokat cseréld le. GitHub Pages: Settings > Pages > Deploy from branch > main / root. Androidon frissítsd az oldalt, szükség esetén ürítsd a korábbi oldal gyorsítótárát.
 
-## Megjegyzések
-A historikus adatok Binance nyilvános historikus klines API-jából származnak; a böngészőből való elérés szolgáltatói hozzáféréstől és CORS-tól függ. A 70/30 felosztás nem többablakos walk-forward validáció. A jelzések az előző lezárt gyertyán alapulnak, a következő gyertya nyitásán történik virtuális vétel. A stratégia indikátorai SMA20/SMA60, RSI14 és ATR14; nem neurális hálózat. A jutalék 0,10%, a becsült csúszás 0,05% oldalanként. A gyertyán belüli stop/célár sorrend ismeretlen. Az eredmények nem garantálnak nyereséget.
+## Működés
+Nyilvános Binance órás OHLC adatok, kizárólag lezárt gyertyák. Az utolsó 30% elkülönített visszateszt. EMA/SMA jellegű 20/60 mozgóátlag, RSI és ATR alapú long-only belépés; ATR stop; szünet veszteség után; konzervatív OHLC stop-prioritás. A pozíció a következő gyertya nyitásán lép be, és az azonos gyertyán belüli stop/cél találatot is figyeli. Jutalék 0,10%, csúszás 0,05% oldalanként. Nettó PnL a belépési és kilépési díjat tartalmazza. Az equity becsült zárási költséget is levon. A stop/cél teljesülési sorrendje OHLC adatokból nem ismerhető meg, ezért azonos gyertyán belüli kettős érintésnél stop az első.
+
+## Korlátok
+A szimuláció nem jósol profitot. A walk-forward itt egyszeri 70/30 időrendi holdout, nem többszörös újratanítás. A 30%-os tesztszakaszon ismételten hangolt paraméterek elveszítik a független teszt jellegüket. A stratégia szabályalapú, nem neurális AI. Offline csak a már betöltött alkalmazásfájlok működhetnek; historikus adatok lekéréséhez internet szükséges.
