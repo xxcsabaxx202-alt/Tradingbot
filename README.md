@@ -1,4 +1,4 @@
-# Crypto Paper Bot v9.0
+# Crypto Paper Bot v10.0
 
 Mobilbarát, statikus GitHub Pages virtuális kriptokereskedési szimulátor. Nincs API-kulcs, valódi kereskedés vagy szerveroldali adatmentés.
 
@@ -11,7 +11,12 @@ Nyilvános Binance órás OHLC adatok, kizárólag lezárt gyertyák. Az utolsó
 ## Korlátok
 A szimuláció nem jósol profitot. A visszateszt egyszeri 70/30 időrendi holdout, nem többszörös újratanítás. A 30%-os tesztszakaszon ismételten hangolt paraméterek elveszítik a független teszt jellegüket. A stratégia szabályalapú, nem neurális AI. Offline csak a már betöltött alkalmazásfájlok működhetnek; historikus adatok lekéréséhez internet szükséges.
 
-## v9.0 – ellenőrizhető alapjavítások
+## v10.0 – ellenőrizhető alapjavítások
 - Pontosított 70/30 holdout megnevezés; a program nem végez gördülő újratanítást.
 - Új adatletöltés vagy hiba után a korábbi eredmények, tőkegörbe és döntési napló törlődnek, így nem maradnak félrevezető, elavult eredmények.
 - A stratégia matematikai szabályai változatlanok; ez a verzió nem állít jobb hozamot vagy valódi AI-t.
+
+## v10.0 – ügyletdiagnosztika
+- A lezárt virtuális ügyletek belépési RSI-je, nettó PnL-je és tartási ideje alapján összesítő táblázat.
+- A belépési RSI-t a jelzés alapjául szolgáló előző gyertyából rögzítjük.
+- Az eredmények nem módosítják a belépési szabályokat; a csoportok nem független statisztikai minták.
